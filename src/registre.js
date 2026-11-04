@@ -8,20 +8,29 @@ export const OPERATIONS = ['semis', 'arrosage', 'désherbage', 'repiquage', 'ré
 // Renvoie une ligne de texte qui décrit l'opération.
 // Exemple : 'O03 | 2026-10-21 | P1 | tomate | arrosage | 2000 FCFA'
 export function formaterOperation(operation) {
-  throw new Error('TODO : coder formaterOperation dans src/registre.js');
+    return `${operation.id} | ${operation.date} | ${operation.parcelle} | ${operation.culture} | ${operation.operation} | ${operation.coutFCFA} FCFA`;
 }
-
 // Renvoie un texte avec une opération par ligne (lignes séparées par '\n'),
 // ou 'Aucune opération enregistrée.' si la liste est vide.
 export function listerOperations(operations) {
-  throw new Error('TODO : coder listerOperations dans src/registre.js');
+   if (operations.length === 0) {
+    return 'Aucune opération enregistrée.';
+  }
+  const lignes = [];
+  for (const operation of operations) {
+    lignes.push(formaterOperation(operation));
+  }
+  return lignes.join('\n');
 }
-
 // Renvoie l'opération qui a cet identifiant, ou undefined si elle n'existe pas.
-export function trouverParId(operations, id) {
-  throw new Error('TODO : coder trouverParId dans src/registre.js');
+  export function trouverParId(operations, id) {
+  for (const operation of operations) {
+    if (operation.id === id) {
+      return operation;
+    }
+  }
+  return undefined;
 }
-
 // Contrôle une saisie AVANT de l'ajouter. Tous les champs arrivent sous forme de TEXTE :
 // { id: 'O11', date: '2026-10-27', parcelle: 'P1', culture: 'tomate', operation: 'récolte', coutFCFA: '2500' }
 // Renvoie un tableau de messages d'erreur, un message par règle non respectée ;
@@ -30,16 +39,66 @@ export function trouverParId(operations, id) {
 // obligatoires (n'importe quel texte non vide) · operation présente dans OPERATIONS
 // · coutFCFA nombre positif ou nul.
 export function verifierOperation(saisie, operations) {
-  throw new Error('TODO : coder verifierOperation dans src/registre.js');
+  const erreurs = [];
+ 
+  // Identifiant : obligatoire et unique.
+  let id = '';
+  if (typeof saisie.id === 'string') {
+    id = saisie.id.trim();
+  }
+  if (id === '') {
+    erreurs.push("L'identifiant est obligatoire.");
+  } else if (trouverParId(operations, id) !== undefined) {
+    erreurs.push(`L'identifiant ${id} existe déjà.`);
+  }
+ 
+  // Date : réelle, au format AAAA-MM-JJ.
+  if (!estDateValide(saisie.date)) {
+    erreurs.push('La date doit être une date réelle au format AAAA-MM-JJ.');
+  }
+ 
+  // Parcelle : obligatoire.
+  if (typeof saisie.parcelle !== 'string' || saisie.parcelle.trim() === '') {
+    erreurs.push('La parcelle est obligatoire.');
+  }
+ 
+  // Culture : obligatoire.
+  if (typeof saisie.culture !== 'string' || saisie.culture.trim() === '') {
+    erreurs.push('La culture est obligatoire.');
+  }
+ 
+  // Opération : une des valeurs de la liste.
+  if (!OPERATIONS.includes(saisie.operation)) {
+    erreurs.push(`L'opération doit être l'une de : ${OPERATIONS.join(', ')}.`);
+  }
+ 
+  // Coût : un nombre positif ou nul.
+  const cout = versNombre(saisie.coutFCFA);
+  if (Number.isNaN(cout) || cout < 0) {
+    erreurs.push('Le coût doit être un nombre positif ou nul (en FCFA).');
+  }
+ 
+  return erreurs;
 }
 
 // Fabrique l'opération à enregistrer à partir d'une saisie VALIDE : coutFCFA devient un nombre.
 export function creerOperation(saisie) {
-  throw new Error('TODO : coder creerOperation dans src/registre.js');
+ return {
+    id: saisie.id.trim(),
+    date: saisie.date,
+    parcelle: saisie.parcelle.trim(),
+    culture: saisie.culture.trim(),
+    operation: saisie.operation,
+    coutFCFA: versNombre(saisie.coutFCFA)
+  };
 }
-
 // Ajoute la saisie au registre si elle est valide (verifierOperation, puis creerOperation).
 // Renvoie les erreurs : [] si l'opération a été ajoutée ; sinon les messages, et rien n'est ajouté.
 export function ajouterOperation(operations, saisie) {
-  throw new Error('TODO : coder ajouterOperation dans src/registre.js');
+ const erreurs = verifierOperation(saisie, operations);
+  if (erreurs.length > 0) {
+    return erreurs;
+  }
+  operations.push(creerOperation(saisie));
+  return [];
 }
