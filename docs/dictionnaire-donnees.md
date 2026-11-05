@@ -8,8 +8,8 @@
 | `date` |dat de l'operation |date |date réelle du format AAAA-MM-JJ |—|`2026-10-20`|
 |`parcelle`|parcelle ou a lieu l'operation|texte|non vide, absent des données |—| `P2`|
 |`culture`|culture suivie sur la parcelle |texte | non vide, absent des données|—| `gombo`|
-| `operation`|type du geste technique|texte|trouvable dans le fichier `donnees/operations.json`|—| `semis`|
-| `coutFCFA`|dépense enregistrée pour l'operation |nombre|nombre doit etre positif ou nul|FCFA| `4000`|
+| `operation`|type du geste technique|texte|trouvable dans le fichier `donnees/operations.json`|—|`semis`|
+| `coutFCFA`|dépense enregistrée pour l'operation |nombre|nombre doit etre positif ou nul|FCFA|`4500`|
 
 **Listes de valeurs autorisées** : 
 `id` suit le format `O` plus deux chiffres, seulement dans tout le registre
