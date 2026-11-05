@@ -93,7 +93,7 @@ async function rechercher(operations) {
   console.log('--- Rechercher ---');
   console.log('1. Par identifiant');
   console.log('2. Par parcelle');
-  console.log("3. Les opérations d'une culture");
+  console.log("3. Par culture");
   const sousChoix = await demander('Votre choix : ');
   if (sousChoix === null) {
     return;
@@ -127,7 +127,7 @@ async function rechercher(operations) {
     }
     const culture = reponse.toLowerCase();
     const resultat = filtrerParCulture(operations, culture);
-    console.log(`${resultat.length} opération(s) pour la culture ${culture} :`);
+    console.log(`${resultat.length} opération(s) sur la culture ${culture} :`);
     console.log(listerOperations(resultat));
   } else {
     console.log('Choix inconnu : retour au menu.');
